@@ -22,16 +22,20 @@ var db *sql.DB
 func InitMysql() {
 	fmt.Println("[InitMysql]InitMysql....")
 	if db == nil {
-		dbPassword := flag.String("db_password", "nil", "The password of db connection")
-		dbUrl := flag.String("db_url", "nil", "The url of db connection")
-		flag.Parse()
-		dbString := fmt.Sprintf("root:%s@tcp(%s:3306)/test1?charset=utf8", *dbPassword, *dbUrl)
-		log.Println("@@@dbString:", dbString)
-		db, _ = sql.Open(config.DriverName, dbString)
+		db, _ = sql.Open(config.DriverName, buildDBString())
 		CreateTableWithUser()
 		CreateTableWithArticle()
 		CreateTableWithAlbum()
 	}
+}
+
+func buildDBString() string {
+	dbPassword := flag.String("db_password", "nil", "The password of db connection")
+	dbUrl := flag.String("db_url", "nil", "The url of db connection")
+	flag.Parse()
+	dbString := fmt.Sprintf("root:%s@tcp(%s:3306)/test1?charset=utf8", *dbPassword, *dbUrl)
+	log.Println("@@@dbString:", dbString)
+	return dbString
 }
 
 //操作数据库
